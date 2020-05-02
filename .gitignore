@@ -105,5 +105,5 @@ dist
 
 # Secret Stuff
 .env
-config/token.json
-config/credentials.json
+routes/token.json
+routes/credentials.json
