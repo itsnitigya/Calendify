@@ -12,8 +12,20 @@ const credentialsjson = process.env.credentialsjson;
 exp.ping = async (req,res) => {
   let err, auth, result;
   [err , auth] = await to (authorize(JSON.parse(credentialsjson)));
+  const calendar = google.calendar({version: 'v3', auth});
+  [err , result] = await to(calendar.calendarList.list({
+    auth: auth,
+    maxResults: 100
+  },
+  ));
+  for(var k = 0 ; k < result.data.items.length ; k++){
+    var obj = result.data.items[k];
+     if(obj.primary){
+       console.log(obj.id);
+     }
+  }
   [err , result] = await to(listEvents(auth));
-  console.log(result);
+  //console.log(result);
   return res.sendSuccess("pong");
 };
 
@@ -49,7 +61,7 @@ var event = {
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
   let err , result; 
-  err , result = await to(calendar.freebusy.query({
+  [err , result] = await to(calendar.freebusy.query({
     auth : auth,
     headers: { "content-type" : "application/json" },
     calendarId : 'primary',
