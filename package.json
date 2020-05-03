@@ -14,6 +14,7 @@
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
     "core-util-is": "^1.0.2",
+    "deferred": "^0.7.11",
     "dotenv": "^6.2.0",
     "ejs": "^2.7.1",
     "express": "^4.16.4",
