@@ -4,7 +4,9 @@ const to = require("../utils/to");
 const test = require("./test.js");
 const create = require('./create.js');
 
-router.get("/ping" ,test.ping);
+router.post("/ping" ,test.ping);
 router.post("/create" , create.createMeeting);
+router.post("/token" , test.getToken);
+router.post("/signup" , test.signup);
 
 module.exports = router;

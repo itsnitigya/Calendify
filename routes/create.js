@@ -10,12 +10,10 @@ exp = {}
 const credentialsjson = process.env.credentialsjson;
 
 exp.createMeeting = async(req , res) => {
+    let email = req.body.email;
     let link = req.body.link;
     let start = new Date(req.body.start).toISOString();
     let end = new Date(req.body.end).toISOString();
-    console.log(link);
-    console.log(start);
-    console.log(end);
     let err , result;
     var event = {
         'summary': 'Meeting',
@@ -43,8 +41,7 @@ exp.createMeeting = async(req , res) => {
           ],
         },
     };
-    [err , auth] = await to (authorize(JSON.parse(credentialsjson)));
-    let email = goole.email;
+    [err , auth] = await to (authorize(JSON.parse(credentialsjson , email)));
     let  calendar = google.calendar({version: 'v3', auth});
     [err , result] = await to(calendar.events.insert({
         auth: auth,

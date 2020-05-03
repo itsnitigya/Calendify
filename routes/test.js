@@ -4,6 +4,7 @@ const to = require("../utils/to");
 const {google} = require('googleapis');
 const fs = require('fs');
 const authorize = require('./auth.js');
+const readline = require('readline');
 
 let exp = {};
 
@@ -11,7 +12,8 @@ const credentialsjson = process.env.credentialsjson;
 
 exp.ping = async (req,res) => {
   let err, auth, result;
-  [err , auth] = await to (authorize(JSON.parse(credentialsjson)));
+  let email = req.body.email;
+  [err , auth] = await to (authorize(JSON.parse(credentialsjson),email));
   const calendar = google.calendar({version: 'v3', auth});
   [err , result] = await to(calendar.calendarList.list({
     auth: auth,
@@ -78,7 +80,42 @@ async function listEvents(auth) {
   return result;
 }
 
+exp.getToken = async(req, res) => {
+  let err, result;
+  const SCOPES = ['https://www.googleapis.com/auth/calendar'];
+  let credentials = JSON.parse(process.env.credentialsjson);
+  const {client_secret, client_id, redirect_uris} = credentials.installed;
+  const oAuth2Client = new google.auth.OAuth2(
+      client_id, client_secret, redirect_uris[0]
+  );
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: SCOPES,
+  });
+  console.log('Authorize this app by visiting this url:', authUrl);
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  rl.question('Enter the code from that page here: ', (code) => {
+    rl.close();
+    oAuth2Client.getToken(code, (err, token) => {
+      if (err) return console.error('Error retrieving access token', err);
+      oAuth2Client.setCredentials(JSON.stringify(token));
+      console.log(JSON.stringify(token));
+    });
+  });
+  return res.sendSuccess(true);
+};
 
-
+exp.signup = async(req, res) => {
+  let err,result;
+  let email = req.body.email;
+  let token = JSON.stringify({"access_token":"ya29.a0Ae4lvC2AzQpQSKhYnfBKPp0Mv_rmOcTU8XRYxpyTjBlpO4x3rh5UVOAT6sK64Iwm_zMlXD4vSlPZsLKvGCSbC_RliEmbYMy503jiTgPlNoOQ1fOS5mwg0-v5aevckw0uzRI5dtEhFKdghjmjSlk4Wiexhm2zVEUF3g0","refresh_token":"1//0gT5i_NaPVYFcCgYIARAAGBASNwF-L9Ir9sRq_NmBA7uhG3UmXjb-rFxy6NB7bHFCs-tGrgJTmv8_YP50UfIayfwlcZRbQ09EdEo","scope":"https://www.googleapis.com/auth/calendar","token_type":"Bearer","expiry_date":1588428944817});
+  [err , result] = await to(db.query("insert into users values(?,?)" , [email,token]));
+  if(err)
+    return res.sendError(err);
+  res.sendSuccess("added user in db");
+};
 
 module.exports = exp;
