@@ -27,38 +27,8 @@ exp.ping = async (req,res) => {
      }
   }
   [err , result] = await to(listEvents(auth));
-  //console.log(result);
   return res.sendSuccess("pong");
 };
-
-var event = {
-  'summary': 'Google I/O 2015',
-  'location': '800 Howard St., San Francisco, CA 94103',
-  'description': 'A chance to hear more about Google\'s developer products.',
-  'start': {
-    'dateTime': '2015-05-28T09:00:00-07:00',
-    'timeZone': 'America/Los_Angeles',
-  },
-  'end': {
-    'dateTime': '2015-05-28T17:00:00-07:00',
-    'timeZone': 'America/Los_Angeles',
-  },
-  'recurrence': [
-    'RRULE:FREQ=DAILY;COUNT=2'
-  ],
-  'attendees': [
-    {'email': 'lpage@example.com'},
-    {'email': 'sbrin@example.com'},
-  ],
-  'reminders': {
-    'useDefault': false,
-    'overrides': [
-      {'method': 'email', 'minutes': 24 * 60},
-      {'method': 'popup', 'minutes': 10},
-    ],
-  },
-};
-
 
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
@@ -108,10 +78,13 @@ exp.getToken = async(req, res) => {
   return res.sendSuccess(true);
 };
 
+//need to redirect get Token after recieving the token in the signup page from frontend 
+
 exp.signup = async(req, res) => {
   let err,result;
   let email = req.body.email;
-  let token = JSON.stringify({"access_token":"ya29.a0Ae4lvC2AzQpQSKhYnfBKPp0Mv_rmOcTU8XRYxpyTjBlpO4x3rh5UVOAT6sK64Iwm_zMlXD4vSlPZsLKvGCSbC_RliEmbYMy503jiTgPlNoOQ1fOS5mwg0-v5aevckw0uzRI5dtEhFKdghjmjSlk4Wiexhm2zVEUF3g0","refresh_token":"1//0gT5i_NaPVYFcCgYIARAAGBASNwF-L9Ir9sRq_NmBA7uhG3UmXjb-rFxy6NB7bHFCs-tGrgJTmv8_YP50UfIayfwlcZRbQ09EdEo","scope":"https://www.googleapis.com/auth/calendar","token_type":"Bearer","expiry_date":1588428944817});
+  //very bad of recieving tokens
+  let token = 'token here';
   [err , result] = await to(db.query("insert into users values(?,?)" , [email,token]));
   if(err)
     return res.sendError(err);

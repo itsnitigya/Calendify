@@ -9,7 +9,6 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS meeting;
 CREATE TABLE meeting(
-    m_id INT PRIMARY KEY AUTO_INCREMENT,
     link TEXT  NOT NULL,
     email TEXT NOT NULL,
     start_time TEXT NOT NULL,
