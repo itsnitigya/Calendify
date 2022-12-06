@@ -9,7 +9,7 @@
   "author": "Nitigya Kapoor",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "config": "^3.0.1",
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
@@ -17,7 +17,7 @@
     "deferred": "^0.7.11",
     "dotenv": "^6.2.0",
     "ejs": "^2.7.1",
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "express-session": "^1.15.6",
     "googleapis": "^39.2.0",
     "joi": "^14.3.1",
